@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+  database: 
+     image: mysql:8.0
+     volumes:
+      - db_data:/var/lib/mysql
+     restart: always
+     environment: 
+       MYSQL_ROOT_PASSWORD: testpassword
+       MYSQL_DATABASE: test-automation
+       MYSQL_USER: admin
+       MYSQL_PASSWORD: testpassword
+
+     networks:
+      - wp
+
+  wordpress:
+     ports:
+      - "8000:80"
+     depends_on: 
+      - database
+     image: wordpress:latest
+     volumes: ["./html:/var/www/html"]
+     environment:
+       WORDPRESS_DB_HOST: database:3306
+       WORDPRESS_DB_USER: admin
+       WORDPRESS_DB_PASSWORD: testpassword
+     networks:
+      - wp
+
+networks: 
+  wp:
+volumes:
+   db_data:
+
+
+
+      
